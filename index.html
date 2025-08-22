@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prometheus Technology - AI Asset Allocation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #faf9f7 0%, #f5f4f1 50%, #f0ede7 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: #1a1a1a;
+        }
+
+        .geometric-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background: 
+                linear-gradient(45deg, transparent 49%, #000 49.5%, #000 50.5%, transparent 51%),
+                linear-gradient(-45deg, transparent 49%, #000 49.5%, #000 50.5%, transparent 51%);
+            background-size: 60px 60px;
+            animation: geometricShift 30s linear infinite;
+        }
+
+        @keyframes geometricShift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .element {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.05);
+            animation: elementFloat 20s infinite ease-in-out;
+        }
+
+        .element.circle {
+            border-radius: 50%;
+        }
+
+        .element.square {
+            border-radius: 4px;
+        }
+
+        .element.triangle {
+            width: 0 !important;
+            height: 0 !important;
+            background: transparent !important;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 26px solid rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes elementFloat {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% { 
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-30px) translateX(0px) rotate(180deg);
+                opacity: 0.4;
+            }
+            75% { 
+                transform: translateY(-20px) translateX(-10px) rotate(270deg);
+                opacity: 0.6;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 200;
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-align: center;
+            animation: logoSlide 1s ease-out, logoFloat 8s ease-in-out infinite 1s;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes logoSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { 
+                transform: translateY(0px);
+            }
+            50% { 
+                transform: translateY(-5px);
+            }
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #2a2a2a;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .feature {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .feature h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .feature p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a4a4a;
+            font-weight: 300;
+        }
+
+        .sub-features {
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-feature {
+            margin-bottom: 0.8rem;
+        }
+
+        .sub-feature strong {
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        .contact-btn {
+            background: #1a1a1a;
+            color: #faf9f7;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-decoration: none;
+            display: block;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 1.2s both;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background: #2a2a2a;
+        }
+
+        .contact-btn:hover::before {
+            left: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sharp-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .line {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.06);
+            animation: lineMove 15s linear infinite;
+        }
+
+        .line.horizontal {
+            height: 1px;
+            width: 100%;
+            left: 0;
+        }
+
+        .line.vertical {
+            width: 1px;
+            height: 100%;
+            top: 0;
+        }
+
+        @keyframes lineMove {
+            0% { 
+                opacity: 0;
+                transform: translateY(-100%);
+            }
+            10%, 90% { 
+                opacity: 1;
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(100vh);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.8rem;
+                letter-spacing: 1px;
+            }
+            
+            .container {
+                padding: 4rem 1.5rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+
+            .feature {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="geometric-bg"></div>
+    <div class="sharp-lines" id="sharpLines"></div>
+    <div class="floating-elements" id="floatingElements"></div>
+    
+    <div class="container">
+        <h1 class="logo">PROMETHEUS TECHNOLOGY</h1>
+        <p class="tagline">AI-First Asset Allocation Infrastructure</p>
+        
+        <p class="description">
+            We are building an AI-first asset allocation infrastructure powered by reinforcement learning. Our system combines proprietary default signals with user-defined signals, learning allocation policies that directly map these inputs plus user risk preferences to portfolio weights.
+        </p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Signal Flexibility: Default + User Signals</h3>
+                <div class="sub-features">
+                    <div class="sub-feature">
+                        <strong>Default Signals:</strong> Curated set of proprietary signals (fundamental, macro, sentiment, technical) designed for broad coverage.
+                    </div>
+                    <div class="sub-feature">
+                        <strong>User Signals:</strong> Portfolio managers can add their own custom signals (ESG metrics, factor models, alternative data).
+                    </div>
+                    <div class="sub-feature">
+                        Users choose the mix: <em>only defaults, only custom, or hybrid</em> — the RL engine then trains policies on this tailored signal set.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <h3>Reinforcement Learning Policy Engine</h3>
+                <p>Learns allocation rules directly from data, bypassing fragile return/covariance estimates. Continuously adapts as signal sets evolve.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>User-Defined Risk Layer</h3>
+                <p>Risk preferences (volatility, drawdown, tail risk) are embedded directly into allocation policy. Aligns allocations with investor mandates.</p>
+            </div>
+        </div>
+        
+        <a href="mailto:contact@prometheustech.ai" class="contact-btn">Contact Us</a>
+    </div>
+
+    <script>
+        function createFloatingElement() {
+            const element = document.createElement('div');
+            const shapes = ['circle', 'square', 'triangle'];
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            
+            element.className = `element ${shape}`;
+            
+            if (shape !== 'triangle') {
+                const size = Math.random() * 20 + 10;
+                element.style.width = size + 'px';
+                element.style.height = size + 'px';
+            }
+            
+            element.style.left = Math.random() * 100 + '%';
+            element.style.top = Math.random() * 100 + '%';
+            element.style.animationDelay = Math.random() * 10 + 's';
+            element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            
+            document.getElementById('floatingElements').appendChild(element);
+            
+            setTimeout(() => {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 25000);
+        }
+        
+        function createSharpLine() {
+            const line = document.createElement('div');
+            const isHorizontal = Math.random() > 0.5;
+            
+            line.className = `line ${isHorizontal ? 'horizontal' : 'vertical'}`;
+            
+            if (isHorizontal) {
+                line.style.top = Math.random() * 100 + '%';
+                line.style.animationName = 'lineMove';
+            } else {
+                line.style.left = Math.random() * 100 + '%';
+                line.style.animationName = 'lineMove';
+            }
+            
+            line.style.animationDelay = Math.random() * 5 + 's';
+            line.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            
+            document.getElementById('sharpLines').appendChild(line);
+            
+            setTimeout(() => {
+                if (line.parentNode) {
+                    line.parentNode.removeChild(line);
+                }
+            }, 20000);
+        }
+        
+        // Create floating elements
+        setInterval(createFloatingElement, 3000);
+        for (let i = 0; i < 8; i++) {
+            setTimeout(createFloatingElement, i * 500);
+        }
+        
+        // Create sharp lines
+        setInterval(createSharpLine, 4000);
+        for (let i = 0; i < 4; i++) {
+            setTimeout(createSharpLine, i * 1000);
+        }
+
+        // Subtle parallax effect
+        window.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            document.querySelector('.geometric-bg').style.transform = 
+                `translate(${mouseX * 10}px, ${mouseY * 10}px)`;
+        });
+    </script>
+</body>
+</html>
